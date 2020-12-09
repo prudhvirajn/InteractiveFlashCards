@@ -30,6 +30,9 @@ Window.clearcolor = (1, 1, 1, 1)
 
 
 class MainPage(FloatLayout):
+	'''
+	Implements the start page of the application
+	'''
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 
@@ -47,6 +50,9 @@ class MainPage(FloatLayout):
 
 
 class PaintWidget(Widget):
+	'''
+	Implements the canvas which allows users to draw
+	'''
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 
@@ -56,7 +62,9 @@ class PaintWidget(Widget):
 		self.cv2_canvas = None
 
 	def on_touch_down(self, touch):
-		
+		'''
+		When user touches down, the pen/eraser activates around the area
+		'''
 		if self.cv2_canvas is None:
 			self.cv2_canvas = np.ones((int(self.size[1]), int(self.size[0])), dtype=np.uint8) * 255
 
@@ -74,10 +82,16 @@ class PaintWidget(Widget):
 				# cv2.imwrite('h1.png', self.cv2_canvas)
 
 	def on_touch_move(self, touch):
+		'''
+		User is trying to draw or erase. Mark the points that the user as taken and store in line vectors. 
+		'''
 		if self.collide_point(touch.x, touch.y):
 			touch.ud['line'].points += [touch.x, touch.y]
 
 	def on_touch_up(self, touch):
+		'''
+		User has finished touching 
+		'''
 		if self.collide_point(touch.x, touch.y):
 			pts = touch.ud['line'].points
 			line_points = np.array([[int(pts[i] - self.x), int(self.height - pts[i+1] + self.y)] for i in range(0, len(pts), 2)], dtype=np.int32)
@@ -88,6 +102,9 @@ class PaintWidget(Widget):
 
 
 class SelectLanguage(FloatLayout):
+	'''
+	Page to choose language option
+	'''
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 
@@ -107,6 +124,9 @@ class SelectLanguage(FloatLayout):
 		self.add_widget(self.return_button)
 
 class CanvasPage(FloatLayout):
+	'''
+	Implements the interactive flash card page
+	'''
 	def __init__(self, text='Tree', current_score=0, total_score=2, **kwargs):
 		super().__init__(**kwargs)
 
@@ -122,6 +142,9 @@ class CanvasPage(FloatLayout):
 
 
 class MainApp(App):
+	'''
+	The app itself. Currently just displays the flash card page. Need to work on add transitions between pages. 
+	'''
 	def build(self):
 		return CanvasPage()
 
